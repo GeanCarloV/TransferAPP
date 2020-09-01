@@ -1,4 +1,4 @@
-import { OBTENER_TRANSACIONES, AGREGAR_TRANSACION } from '../../types'
+import { OBTENER_TRANSACIONES, AGREGAR_TRANSACION, ACTUALIZAR_BALANCE } from '../../types';
 
 export default(state, action) => { 
     switch(action.type){
@@ -11,6 +11,11 @@ export default(state, action) => {
             return {
                 ...state,
                 transaciones : [ ...state.transaciones, action.payload]
+            }
+        case ACTUALIZAR_BALANCE: 
+            return { 
+                ...state, 
+                balance: action.payload
             }
         default: 
             return state 

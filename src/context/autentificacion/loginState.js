@@ -1,7 +1,7 @@
 import React, {useReducer} from 'react';
 import loginContext from './loginContext';
 import loginReducer from './loginReducer';
-import { OBTENER_USUARIO } from '../../types'
+import { OBTENER_USUARIO, ELIMINAR_USUARIO } from '../../types'
 
 const LoginState = props => { 
     const initialState = { 
@@ -15,12 +15,18 @@ const LoginState = props => {
             payload: user
         })
     }
-
+    const eliminarUsario = () => { 
+        dispatch({ 
+            type: ELIMINAR_USUARIO, 
+            payload: null
+        })
+    }
     return ( 
         <loginContext.Provider 
             value={{
                 user: state.user, 
-                obtenerUsario
+                obtenerUsario, 
+                eliminarUsario
             }}
         >
             {props.children}

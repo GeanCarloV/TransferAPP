@@ -11,9 +11,11 @@ import './Transfer.css';
 const Transfer = () => {
     
     const TransferContext = useContext(transferContext);
-    const { transaciones, agregarTraccion} = TransferContext;
+    const { balance, transaciones, agregarTraccion, actualizarBalance} = TransferContext;
    
     const [data, setData] = useState([]);
+    const [alerta, setAlerta ] = useState(''); 
+
     const [transfer, setTransfer] = useState({
         "fromAccount": '',
         "toAccount": '',
@@ -26,6 +28,7 @@ const Transfer = () => {
     
     const {toAccount} = transfer;
     const {value} = transfer.amount; 
+    
     useEffect(() => {
         
         setData(transaciones.map(item => 
@@ -34,15 +37,27 @@ const Transfer = () => {
                     value: item.amount.value, 
                     color: generarNuevoColor()
                 })
-    ))}, [transaciones]);
+            ))
+        
+            const  result = transaciones.reduce( (r, a) => {
+            r[a.fromAccount] = [...r[a.fromAccount] || [], a];
+            return r;
+            }, {} );
+        
+            actualizarBalance(result)
+
+    }, [transaciones]);
         
     const cambianCuenta = (e) => {       
+        setAlerta('');
         setTransfer({
                 ...transfer,
                 [e.target.name] : e.target.value
             })
     }
     const monto = (e) => {       
+        setAlerta('');
+        
         setTransfer({
             ...transfer,
             ['amount'] : { 
@@ -55,13 +70,19 @@ const Transfer = () => {
     const onSumit = (e) => { 
         e.preventDefault()
         if(!(transfer.toAccount.length === 8)){ 
-            console.log('La cuenta de destino debe de ser de 8 caracteres'); 
+            setAlerta('La cuenta de destino debe de ser de 8 caracteres'); 
             return            
         }; 
         if(transfer.fromAccount.length === 0){ 
-            console.log('Debes de escoger una cuenta de destino'); 
+            setAlerta('Debes de escoger una cuenta de destino'); 
             return            
         }
+        if(transfer.amount.value < 1) { 
+            setAlerta('El monto debe de ser mayor a 1'); 
+            return
+        }
+
+        
         agregarTraccion(transfer);
     }
 
@@ -74,6 +95,13 @@ const Transfer = () => {
                 <form className="form-transfer" onSubmit={onSumit}>
                     
                     <p className="titulo-from">Create new transfer</p>
+                    {alerta.length ? 
+                    <div className="error" >
+                        <p>{alerta}</p>
+                    </div>
+                    :
+                    null
+                    }
                     
                     <label className="label-from" htmlFor="select">Select origin account</label>
                     <select 
@@ -81,7 +109,9 @@ const Transfer = () => {
                         onChange={cambianCuenta} 
                         className="custom-select"
                         name="fromAccount"
+                        defaultValue={'DEFAULT'}
                     >
+                        <option value="DEFAULT" disabled>Select an Account</option>
                         {curretBalance.balance.map( (item, index) => (
                             <option
                                 key = {index} 
@@ -133,7 +163,17 @@ const Transfer = () => {
         </div>
     
         <div >
-            {/* <TablaTransfer /> */}
+        {    Object.keys(balance).map(function(key, index) {
+
+                return (
+                    <TablaTransfer 
+                        key= {index}
+                        cuenta = {balance[key]}
+                    />
+                )
+                
+            
+            }) }   
         </div>
     </div>
 ) 

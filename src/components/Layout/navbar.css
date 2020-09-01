@@ -18,3 +18,10 @@
     justify-content: flex-start;
     align-items: center;
 }
+
+.hom, 
+.trans {
+    color: white;
+    margin: 0px 20px 0 20px;
+    font-size: 18px;
+}

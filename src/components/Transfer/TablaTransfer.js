@@ -1,25 +1,27 @@
 import React from 'react';
-import { curretBalance } from '../../ejmplos'
 
-const TablaTransfer = () => {
+
+const TablaTransfer = ({cuenta}) => {
     return ( 
         <table>
             <thead>
                 <tr>
-                    <th>Account No.</th>
-                    <th>Balance</th>
-                    <th>Date of Lastest Transfer</th>  
+                    <th>Origin Account</th>
+                    <th>Destination account</th>
+                    <th>Transfer date</th>
+                    <th>Aumount</th>
             </tr>
             </thead>
             <tbody>
-                { curretBalance.balance.map( (item,index) => ( 
+                { cuenta.map( (item,index) => ( 
                     
-                    <tr key={index} >
+                    <tr key={index} >                        
+                        <td>{item.fromAccount}</td>
+                        <td>{item.toAccount}</td>
+                        <td>{item.sentAt.slice(0, 10)}</td>
                         
-                        
-                        <td>{item.account}</td>
-                        <td>{item.balance.currency} {item.balance.value}</td>
-                        <td>{item.createdAt.slice(0, 10)}</td>
+
+                        <td>{item.amount.currency} {item.amount.value}</td>
                     </tr>
                 ))
 
