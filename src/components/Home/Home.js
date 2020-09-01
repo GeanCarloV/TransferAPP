@@ -10,12 +10,10 @@ import './home.css'
 const Home = () => {
     
     const LoginContext = useContext(loginContext); 
-    const { user } = LoginContext;
-    
-    
+    // const { user } = LoginContext;
+    const user = {username: 'GeanCarlo'}
     const TransferContext = useContext(transferContext); 
     const { transaciones, obtenerTracciones } = TransferContext;
-
 
     useEffect(() => {
         // como si fuera el backend cargamos todos los datos backend
@@ -77,8 +75,8 @@ const Home = () => {
             </div>
 
         </main>
-    
     );
+
 }
  
 export default Home;

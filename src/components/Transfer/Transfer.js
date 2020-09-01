@@ -1,28 +1,53 @@
 import React, { useState, useContext, useEffect} from 'react';
 import transferContext from '../../context/transfer/transferContext';   
 
-import TablaTransfer from './TablaTransfer'
+import TablaTransfer from './TablaTransfer';
 import { PieChart } from 'react-minimal-pie-chart';
 import { generarNuevoColor } from '../helper';
+import { curretBalance } from '../../ejmplos';
+
 import './Transfer.css';
 
 const Transfer = () => {
-    const TransferContext = useContext(transferContext); 
-    const { transaciones} = TransferContext;
-    const [data, setData] = useState([])
     
+    const TransferContext = useContext(transferContext);
+    const { transaciones } = TransferContext;
+   
+    const [data, setData] = useState([]);
+    const [transfer, setTransfer] = useState({
+        "fromAccount": '',
+        "toAccount": '',
+        "amount": {
+            "currency": "€",
+            "value": 876.88
+        },
+        "sentAt": "2012-04-23T18:25:43.511Z"
+    })
+    
+    const {toAccount, value} = transfer;
+
     useEffect(() => {
         
-        setData(transaciones.map(item => ({ title: item.toAccount, value: item.amount.value, color: generarNuevoColor()})))
-    }, [])
-    
-    const cambianCuenta = () => { 
-        console.log('se esta cambieando')
+        setData(transaciones.map(item => 
+                ({ 
+                    title: item.toAccount, 
+                    value: item.amount.value, 
+                    color: generarNuevoColor()
+                })
+    ))}, []);
+        
+    const cambianCuenta = (e) => { 
+            
+        setTransfer({
+                ...transfer,
+                [e.target.name] : e.target.value
+            })
+            
     }
 
     const onSumit = (e) => { 
         e.preventDefault()
-        console.log('se fue')
+        console.log('se fue');
     }
 
     return (
@@ -41,15 +66,33 @@ const Transfer = () => {
                         onChange={cambianCuenta} 
                         className="custom-select"
                     >
-                        <option value="cuenta">cuenta</option>
+                        {curretBalance.balance.map( item => (
+                            <option 
+                                name="fromAccount"
+                                value={item.account} 
+                            >{item.account} - {item.balance.currency} {item.balance.value}</option>
+                        ))} 
+                        
 
                     </select>    
 
                     <label className="label-from" htmlFor="destino">Destination occount</label>
-                    <input type="text" name="destino" id="destino"/>
+                    <input 
+                        type="text" 
+                        name="toAccount" 
+                        id="destino"
+                        onChange={cambianCuenta}
+                        value={toAccount}
+                    />
 
                     <label className="label-from" htmlFor="monto">Amount</label>
-                    <input type="text" name="monto" id="monto"/>
+                    <input 
+                        type="text" 
+                        name="value" 
+                        id="monto"
+                        onChange={cambianCuenta}
+                        value={value}
+                    />
 
                     <div className="botones">
                         <input type="submit" value="Transfer"/>
