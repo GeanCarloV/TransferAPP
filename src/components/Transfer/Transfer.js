@@ -11,7 +11,7 @@ import './Transfer.css';
 const Transfer = () => {
     
     const TransferContext = useContext(transferContext);
-    const { transaciones } = TransferContext;
+    const { transaciones, agregarTraccion} = TransferContext;
    
     const [data, setData] = useState([]);
     const [transfer, setTransfer] = useState({
@@ -19,13 +19,13 @@ const Transfer = () => {
         "toAccount": '',
         "amount": {
             "currency": "€",
-            "value": 876.88
+            "value": 0
         },
         "sentAt": "2012-04-23T18:25:43.511Z"
     })
     
-    const {toAccount, value} = transfer;
-
+    const {toAccount} = transfer;
+    const {value} = transfer.amount; 
     useEffect(() => {
         
         setData(transaciones.map(item => 
@@ -34,20 +34,35 @@ const Transfer = () => {
                     value: item.amount.value, 
                     color: generarNuevoColor()
                 })
-    ))}, []);
+    ))}, [transaciones]);
         
-    const cambianCuenta = (e) => { 
-            
+    const cambianCuenta = (e) => {       
         setTransfer({
                 ...transfer,
                 [e.target.name] : e.target.value
             })
-            
     }
-
+    const monto = (e) => {       
+        setTransfer({
+            ...transfer,
+            ['amount'] : { 
+                    ...transfer['amount'],
+                    [e.target.name] : e.target.value
+                    }
+               }
+            )
+    }
     const onSumit = (e) => { 
         e.preventDefault()
-        console.log('se fue');
+        if(!(transfer.toAccount.length === 8)){ 
+            console.log('La cuenta de destino debe de ser de 8 caracteres'); 
+            return            
+        }; 
+        if(transfer.fromAccount.length === 0){ 
+            console.log('Debes de escoger una cuenta de destino'); 
+            return            
+        }
+        agregarTraccion(transfer);
     }
 
     return (
@@ -65,9 +80,11 @@ const Transfer = () => {
                         id='select' 
                         onChange={cambianCuenta} 
                         className="custom-select"
+                        name="fromAccount"
                     >
-                        {curretBalance.balance.map( item => (
-                            <option 
+                        {curretBalance.balance.map( (item, index) => (
+                            <option
+                                key = {index} 
                                 name="fromAccount"
                                 value={item.account} 
                             >{item.account} - {item.balance.currency} {item.balance.value}</option>
@@ -90,7 +107,7 @@ const Transfer = () => {
                         type="text" 
                         name="value" 
                         id="monto"
-                        onChange={cambianCuenta}
+                        onChange={monto}
                         value={value}
                     />
 

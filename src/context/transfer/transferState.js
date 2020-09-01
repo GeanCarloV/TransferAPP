@@ -1,7 +1,10 @@
 import React, {useReducer} from 'react';
 import transferContext from './transferContext';
 import transferReducer from './transferReducer';
-import { OBTENER_TRANSACIONES } from '../../types'
+import { 
+    OBTENER_TRANSACIONES,
+    AGREGAR_TRANSACION
+    } from '../../types'
 
 
 const TransferState = props => { 
@@ -19,12 +22,18 @@ const TransferState = props => {
             payload: transaciones 
         })
     }
-
+    const agregarTraccion = (transacion) =>{
+        dispatch({
+            type: AGREGAR_TRANSACION,
+            payload: transacion
+        })
+    }
     return ( 
         <transferContext.Provider 
             value={{
                 transaciones: state.transaciones, 
-                obtenerTracciones
+                obtenerTracciones,
+                agregarTraccion
             }}
         >
             {props.children}
