@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'; 
+import Login from  './components/Login/Login'
+import Home from './components/Home/Home'
+import Transfer from './components/Transfer/Transfer'
+import Navbar from './components/Layout/Navbar'
+// context 
+import LoginState from './context/autentificacion/loginState'
+import TransferState from './context/transfer/transferState'
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TransferState>
+      <LoginState>
+        <Router>
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={Login} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/transfer" component={Transfer} />
+          </Switch>
+        </Router>
+      </LoginState>
+    </TransferState>
   );
 }
 

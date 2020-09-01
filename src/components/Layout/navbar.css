@@ -1,0 +1,20 @@
+.nav-conteiner {
+    background-color: var(--negro);
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+ }
+    
+.letra-nav{ 
+    font-size: 18px;
+    color: var(--grisLetra); 
+    text-decoration: none;  
+    margin: 0px 20px 0 20px;
+
+}
+.links { 
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
